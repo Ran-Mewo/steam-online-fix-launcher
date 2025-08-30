@@ -181,6 +181,11 @@
       <summary>Arguments after command</summary>
       <description>Additional arguments to add after the launch command</description>
     </key>
+    <key name="online-fix-launch-options" type="s">
+      <default>""</default>
+      <summary>Launch Options (Steam-like)</summary>
+      <description>Custom launch options supporting %command% placeholder to wrap the game command</description>
+    </key>
     <key name="online-fix-debug-mode" type="b">
       <default>false</default>
       <summary>Debug mode</summary>

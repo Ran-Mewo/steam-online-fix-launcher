@@ -465,6 +465,16 @@ template $SOFLPreferences: Adw.PreferencesDialog {
       }
     }
 
+    Adw.PreferencesGroup online_fix_launch_options_group {
+      title: _("Launch Options");
+      description: _("Steam-like launch options. Use %command% to wrap the game command");
+
+      Adw.EntryRow online_fix_launch_options_entry {
+        title: _("Launch Options");
+        tooltip-text: _("Example: /home/user/pylauncher/pymod %command%");
+      }
+    }
+
     Adw.PreferencesGroup online_fix_patches_group {
       title: _("Manual Patches");
       description: _("Configure manual patches for specific games");
