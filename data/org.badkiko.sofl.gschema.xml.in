@@ -181,6 +181,11 @@
       <summary>Arguments after command</summary>
       <description>Additional arguments to add after the launch command</description>
     </key>
+    <key name="online-fix-launch-options" type="s">
+      <default>""</default>
+      <summary>Custom launch options</summary>
+      <description>Steam-style launch options with %command% placeholder for custom launchers</description>
+    </key>
     <key name="online-fix-debug-mode" type="b">
       <default>false</default>
       <summary>Debug mode</summary>

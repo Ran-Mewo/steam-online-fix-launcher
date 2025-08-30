@@ -128,6 +128,8 @@ class SOFLPreferences(Adw.PreferencesDialog):
     online_fix_auto_patch_switch: Adw.SwitchRow = Gtk.Template.Child()
     online_fix_dll_override_entry: Adw.EntryRow = Gtk.Template.Child()
     online_fix_dll_group: Adw.PreferencesGroup = Gtk.Template.Child()
+    online_fix_launch_options_entry: Adw.EntryRow = Gtk.Template.Child()
+    online_fix_launch_group: Adw.PreferencesGroup = Gtk.Template.Child()
     online_fix_patches_group: Adw.PreferencesGroup = Gtk.Template.Child()
     online_fix_steam_appid_switch: Adw.SwitchRow = Gtk.Template.Child()
     online_fix_patch_steam_fix_64: Adw.SwitchRow = Gtk.Template.Child()
@@ -572,6 +574,14 @@ class SOFLPreferences(Adw.PreferencesDialog):
             "changed", self.on_dll_overrides_changed
         )
 
+        # Setup Launch Options
+        self.online_fix_launch_options_entry.set_text(
+            shared.schema.get_string("online-fix-launch-options")
+        )
+        self.online_fix_launch_options_entry.connect(
+            "changed", self.on_launch_options_changed
+        )
+
         # Setup manual patches
         shared.schema.bind(
             "online-fix-steam-appid-patch",
@@ -671,6 +681,10 @@ class SOFLPreferences(Adw.PreferencesDialog):
     def on_dll_overrides_changed(self, entry: Adw.EntryRow) -> None:
         """Handler for DLL overrides change"""
         shared.schema.set_string("online-fix-dll-overrides", entry.get_text())
+
+    def on_launch_options_changed(self, entry: Adw.EntryRow) -> None:
+        """Handler for launch options change"""
+        shared.schema.set_string("online-fix-launch-options", entry.get_text())
 
     def online_fix_path_browse_handler(self, *_args):
         """Choose directory for Online-Fix games installation"""

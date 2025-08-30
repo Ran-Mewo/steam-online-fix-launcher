@@ -465,6 +465,16 @@ template $SOFLPreferences: Adw.PreferencesDialog {
       }
     }
 
+    Adw.PreferencesGroup online_fix_launch_group {
+      title: _("Launch Options");
+      description: _("Steam-style launch options with %command% placeholder");
+
+      Adw.EntryRow online_fix_launch_options_entry {
+        title: _("Launch Options");
+        tooltip-text: _("Example: /path/to/script %command% --additional-args");
+      }
+    }
+
     Adw.PreferencesGroup online_fix_patches_group {
       title: _("Manual Patches");
       description: _("Configure manual patches for specific games");

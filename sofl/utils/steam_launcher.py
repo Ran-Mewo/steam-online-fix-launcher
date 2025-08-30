@@ -179,29 +179,47 @@ class SteamLauncher:
         steam_runtime_path: Optional[str] = None,
         args_before: Optional[str] = None,
         args_after: Optional[str] = None,
+        launch_options: Optional[str] = None,
     ) -> List[str]:
         """Builds game launch command"""
-        cmd_argv = [proton_path, "run", game_exec]
+        # Build the base command (this becomes %command%)
+        base_cmd = [proton_path, "run", game_exec]
 
         if steam_runtime_path:
-            cmd_argv.insert(0, steam_runtime_path)
+            base_cmd.insert(0, steam_runtime_path)
 
-        # Safely add arguments
+        # Safely add online-fix arguments to base command
         if args_before:
             try:
                 args_before_list = shlex.split(args_before)
-                cmd_argv = args_before_list + cmd_argv
+                base_cmd = args_before_list + base_cmd
             except ValueError as e:
                 logging.warning(f"[SOFL] Failed to parse args_before '{args_before}': {e}")
 
         if args_after:
             try:
                 args_after_list = shlex.split(args_after)
-                cmd_argv.extend(args_after_list)
+                base_cmd.extend(args_after_list)
             except ValueError as e:
                 logging.warning(f"[SOFL] Failed to parse args_after '{args_after}': {e}")
 
-        return cmd_argv
+        # Handle custom launch options with %command% replacement
+        if launch_options and launch_options.strip():
+            try:
+                # Replace %command% with the base command
+                base_cmd_str = " ".join(shlex.quote(arg) for arg in base_cmd)
+                final_command_str = launch_options.replace("%command%", base_cmd_str)
+                
+                # Parse the final command back into argv
+                cmd_argv = shlex.split(final_command_str)
+                logging.info(f"[SOFL] Using custom launch options: {launch_options}")
+                logging.info(f"[SOFL] Final command: {final_command_str}")
+                return cmd_argv
+            except ValueError as e:
+                logging.warning(f"[SOFL] Failed to parse launch_options '{launch_options}': {e}")
+                logging.info(f"[SOFL] Falling back to default command")
+
+        return base_cmd
 
     @staticmethod
     def launch_game(cmd_argv: List[str], env: Dict[str, str], game_dir: Path, in_flatpak: bool = False) -> None:
