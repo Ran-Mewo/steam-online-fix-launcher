@@ -128,6 +128,8 @@ class SOFLPreferences(Adw.PreferencesDialog):
     online_fix_auto_patch_switch: Adw.SwitchRow = Gtk.Template.Child()
     online_fix_dll_override_entry: Adw.EntryRow = Gtk.Template.Child()
     online_fix_dll_group: Adw.PreferencesGroup = Gtk.Template.Child()
+    online_fix_launch_options_group: Adw.PreferencesGroup = Gtk.Template.Child()
+    online_fix_launch_options_entry: Adw.EntryRow = Gtk.Template.Child()
     online_fix_patches_group: Adw.PreferencesGroup = Gtk.Template.Child()
     online_fix_steam_appid_switch: Adw.SwitchRow = Gtk.Template.Child()
     online_fix_patch_steam_fix_64: Adw.SwitchRow = Gtk.Template.Child()
@@ -570,6 +572,18 @@ class SOFLPreferences(Adw.PreferencesDialog):
         )
         self.online_fix_dll_override_entry.connect(
             "changed", self.on_dll_overrides_changed
+        )
+
+        # Setup Launch Options
+        try:
+            current_launch_options = shared.schema.get_string("online-fix-launch-options")
+        except GLib.Error:
+            current_launch_options = ""
+            shared.schema.set_string("online-fix-launch-options", current_launch_options)
+
+        self.online_fix_launch_options_entry.set_text(current_launch_options)
+        self.online_fix_launch_options_entry.connect(
+            "changed", lambda entry: shared.schema.set_string("online-fix-launch-options", entry.get_text())
         )
 
         # Setup manual patches

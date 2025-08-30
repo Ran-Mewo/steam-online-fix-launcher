@@ -179,6 +179,7 @@ class SteamLauncher:
         steam_runtime_path: Optional[str] = None,
         args_before: Optional[str] = None,
         args_after: Optional[str] = None,
+        launch_options: Optional[str] = None,
     ) -> List[str]:
         """Builds game launch command"""
         cmd_argv = [proton_path, "run", game_exec]
@@ -200,6 +201,25 @@ class SteamLauncher:
                 cmd_argv.extend(args_after_list)
             except ValueError as e:
                 logging.warning(f"[SOFL] Failed to parse args_after '{args_after}': {e}")
+
+        # Apply Steam-like launch options
+        if launch_options and launch_options.strip():
+            try:
+                lo_tokens = shlex.split(launch_options)
+                # If %command% is present, substitute it with the current command
+                if any(token == "%command%" for token in lo_tokens):
+                    substituted: List[str] = []
+                    for token in lo_tokens:
+                        if token == "%command%":
+                            substituted.extend(cmd_argv)
+                        else:
+                            substituted.append(token)
+                    return substituted
+                else:
+                    # Otherwise, append tokens as additional args (Steam behavior)
+                    return cmd_argv + lo_tokens
+            except ValueError as e:
+                logging.warning(f"[SOFL] Failed to parse launch options '{launch_options}': {e}")
 
         return cmd_argv
 
