@@ -148,7 +148,7 @@ class SteamLauncher:
             return False
 
     @staticmethod
-    def prepare_environment(prefix_path: str, user_home: str) -> Dict[str, str]:
+    def prepare_environment(prefix_path: str, user_home: str, compat_tool_paths: Optional[List[str]] = None) -> Dict[str, str]:
         """Prepares environment variables for launch"""
         dll_overrides = shared.schema.get_string("online-fix-dll-overrides")
         debug_mode = shared.schema.get_boolean("online-fix-debug-mode")
@@ -160,6 +160,13 @@ class SteamLauncher:
             "STEAM_COMPAT_DATA_PATH": prefix_path,
             "STEAM_COMPAT_CLIENT_INSTALL_PATH": f"{user_home}/.steam/steam",
         }
+
+        # Provide Steam-like tool paths so tools relying on STEAM_COMPAT_TOOL_PATHS work
+        if compat_tool_paths:
+            try:
+                env["STEAM_COMPAT_TOOL_PATHS"] = os.pathsep.join(compat_tool_paths)
+            except Exception:
+                pass
 
         # Add Steam Overlay if enabled
         use_steam_overlay = shared.schema.get_boolean("online-fix-use-steam-overlay")

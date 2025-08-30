@@ -107,8 +107,9 @@ class OnlineFixGameData(GameData):
         prefix_path = self._create_wine_prefix(game_exec)
         user_home = host_home if in_flatpak else os.path.expanduser("~")
 
-        # Prepare environment variables
-        env = SteamLauncher.prepare_environment(prefix_path, user_home)
+        # Prepare environment variables and include Proton tool dir for Steam-like behavior
+        proton_tool_dir = os.path.dirname(proton_path)
+        env = SteamLauncher.prepare_environment(prefix_path, user_home, [proton_tool_dir])
 
         # Find Steam Runtime if enabled
         steam_runtime_path = None
