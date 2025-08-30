@@ -125,13 +125,15 @@ class OnlineFixGameData(GameData):
         # Build launch command
         args_before = shared.schema.get_string("online-fix-args-before")
         args_after = shared.schema.get_string("online-fix-args-after")
+        launch_options = shared.schema.get_string("online-fix-launch-options")
 
         cmd_argv = SteamLauncher.build_launch_command(
             proton_path,
             str(game_exec),
             steam_runtime_path,
             args_before,
-            args_after
+            args_after,
+            launch_options
         )
 
         # Launch game

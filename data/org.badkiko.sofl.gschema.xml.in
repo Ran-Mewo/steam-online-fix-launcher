@@ -136,6 +136,11 @@
       <summary>DLL overrides</summary>
       <description>DLL overrides for Wine/Proton in format: dll1=n,b;dll2=n,b</description>
     </key>
+    <key name="online-fix-launch-options" type="s">
+      <default>""</default>
+      <summary>Launch options</summary>
+      <description>Custom launch options to be included with the game launch command (e.g. /path/to/script %command%)</description>
+    </key>
     <key name="online-fix-steam-api-patch" type="b">
       <default>true</default>
       <summary>Steam API patch</summary>

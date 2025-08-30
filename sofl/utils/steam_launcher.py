@@ -179,14 +179,40 @@ class SteamLauncher:
         steam_runtime_path: Optional[str] = None,
         args_before: Optional[str] = None,
         args_after: Optional[str] = None,
+        launch_options: Optional[str] = None,
     ) -> List[str]:
         """Builds game launch command"""
-        cmd_argv = [proton_path, "run", game_exec]
-
+        # Build the base command
+        base_cmd = [proton_path, "run", game_exec]
+        
         if steam_runtime_path:
-            cmd_argv.insert(0, steam_runtime_path)
+            base_cmd.insert(0, steam_runtime_path)
+        
+        # Apply launch options if provided
+        if launch_options and "%command%" in launch_options:
+            try:
+                # Parse the launch options
+                launch_parts = shlex.split(launch_options)
+                
+                # Find where %command% is and replace it with the base command
+                cmd_argv = []
+                for part in launch_parts:
+                    if part == "%command%":
+                        cmd_argv.extend(base_cmd)
+                    else:
+                        cmd_argv.append(part)
+                
+                # If %command% wasn't found, append base command at the end
+                if "%command%" not in launch_parts:
+                    cmd_argv.extend(base_cmd)
+                    
+            except ValueError as e:
+                logging.warning(f"[SOFL] Failed to parse launch_options '{launch_options}': {e}")
+                cmd_argv = base_cmd
+        else:
+            cmd_argv = base_cmd
 
-        # Safely add arguments
+        # Safely add arguments before (these are required online-fix args)
         if args_before:
             try:
                 args_before_list = shlex.split(args_before)
@@ -194,6 +220,7 @@ class SteamLauncher:
             except ValueError as e:
                 logging.warning(f"[SOFL] Failed to parse args_before '{args_before}': {e}")
 
+        # Safely add arguments after (these are required online-fix args)
         if args_after:
             try:
                 args_after_list = shlex.split(args_after)

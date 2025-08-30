@@ -465,6 +465,16 @@ template $SOFLPreferences: Adw.PreferencesDialog {
       }
     }
 
+    Adw.PreferencesGroup online_fix_launch_options_group {
+      title: _("Launch Options");
+      description: _("Configure custom launch options for games");
+
+      Adw.EntryRow online_fix_launch_options_entry {
+        title: _("Launch Options");
+        tooltip-text: _("Format: /path/to/script %command% or additional arguments. Use %command% where the game command should be placed.");
+      }
+    }
+
     Adw.PreferencesGroup online_fix_patches_group {
       title: _("Manual Patches");
       description: _("Configure manual patches for specific games");
